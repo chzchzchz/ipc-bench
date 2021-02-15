@@ -18,14 +18,9 @@ void cleanup(int connection, void* buffer) {
 void communicate(int connection, struct Arguments* args, int busy_waiting) {
 	void* buffer = malloc(args->size);
 
+	memset(buffer, '*', args->size);
+
 	for (; args->count > 0; --args->count) {
-		if (receive(connection, buffer, args->size, busy_waiting) == -1) {
-			throw("Error receiving on client-side");
-		}
-
-		// Dummy operation
-		memset(buffer, '*', args->size);
-
 		if (send(connection, buffer, args->size, 0) == -1) {
 			throw("Error sending on client-side");
 		}
